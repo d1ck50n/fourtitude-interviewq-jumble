@@ -192,10 +192,18 @@ class JumbleEngineTest {
 
     @Test
     void givenInvalidInput_whenCreateGameState_thenExpectException() {
-        assertThrows(NullPointerException.class, () -> { engine.createGameState(null, null); }, "length=null;minLength=null");
-        assertThrows(IllegalArgumentException.class, () -> { engine.createGameState(1, null); }, "length=1;minLength=null");
-        assertThrows(IllegalArgumentException.class, () -> { engine.createGameState(2, null); }, "length=2;minLength=null");
-        assertThrows(IllegalArgumentException.class, () -> { engine.createGameState(4, 5); }, "length=4;minLength=5");
+        assertThrows(NullPointerException.class, () -> {
+            engine.createGameState(null, null);
+        }, "length=null;minLength=null");
+        assertThrows(IllegalArgumentException.class, () -> {
+            engine.createGameState(1, null);
+        }, "length=1;minLength=null");
+        assertThrows(IllegalArgumentException.class, () -> {
+            engine.createGameState(2, null);
+        }, "length=2;minLength=null");
+        assertThrows(IllegalArgumentException.class, () -> {
+            engine.createGameState(4, 5);
+        }, "length=4;minLength=5");
     }
 
 }

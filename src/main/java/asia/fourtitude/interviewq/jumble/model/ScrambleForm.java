@@ -6,6 +6,8 @@ public class ScrambleForm {
 
     private String scramble;
 
+    private Boolean exists; // For storing the existence check result
+
     public String getWord() {
         return word;
     }
@@ -20,6 +22,14 @@ public class ScrambleForm {
 
     public void setScramble(String scramble) {
         this.scramble = scramble;
+    }
+
+    public Boolean isExists() {
+        return exists;
+    }
+
+    public void setExists(Boolean exists) {
+        this.exists = exists;
     }
 
     @Override

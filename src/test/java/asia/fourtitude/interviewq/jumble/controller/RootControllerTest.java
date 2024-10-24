@@ -22,7 +22,7 @@ class RootControllerTest {
     @Test
     void whenVisitHomePage_thenExpectTimeNow() throws Exception {
         this.mockMvc.perform(get("/"))
-                        .andDo(print())
+                .andDo(print())
                 .andExpect(view().name("index"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("The time now: ")));
@@ -33,8 +33,8 @@ class RootControllerTest {
         String word = "qwerty";
         String result = "<p>Scrambled word: <span>" + word + "</span></p>";
         this.mockMvc.perform(post("/scramble")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("word", word))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("word", word))
                 .andExpect(view().name("scramble"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(not(containsString(result))));
@@ -45,8 +45,8 @@ class RootControllerTest {
         String word = "";
         String result = "must not be blank";
         this.mockMvc.perform(post("/scramble")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("word", word))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("word", word))
                 .andExpect(view().name("scramble"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString(result)));
@@ -57,8 +57,8 @@ class RootControllerTest {
         String word = "we";
         String result = "size must be between 3 and 30";
         this.mockMvc.perform(post("/scramble")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("word", word))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("word", word))
                 .andExpect(view().name("scramble"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString(result)));
@@ -67,7 +67,7 @@ class RootControllerTest {
     @Test
     void whenVisitPalindrome_thenSuccess() throws Exception {
         this.mockMvc.perform(get("/palindrome"))
-                        .andDo(print())
+                .andDo(print())
                 .andExpect(view().name("palindrome"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("<p>The number of palindrome words: <span>61</span></p>")));
@@ -78,8 +78,8 @@ class RootControllerTest {
         String word = "qwerty";
         String result = "<p>The word \"<span>" + word + "</span>\" exists.</p>";
         this.mockMvc.perform(post("/exists")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("word", word))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("word", word))
                 .andExpect(view().name("exists"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString(result)));
@@ -91,8 +91,8 @@ class RootControllerTest {
         word = new StringBuilder().append(' ').append(word).append(' ').toString();
         String result = "<p>The word \"<span>" + word + "</span>\" exists.</p>";
         this.mockMvc.perform(post("/exists")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("word", word))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("word", word))
                 .andExpect(view().name("exists"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString(result)));
@@ -103,8 +103,8 @@ class RootControllerTest {
         String word = "fourtitude";
         String result = "<p>The word \"<span>" + word + "</span>\" not exists.</p>";
         this.mockMvc.perform(post("/exists")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("word", word))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("word", word))
                 .andExpect(view().name("exists"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString(result)));
@@ -115,8 +115,8 @@ class RootControllerTest {
         String word = "";
         String result = "must not be blank";
         this.mockMvc.perform(post("/exists")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("word", word))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("word", word))
                 .andExpect(view().name("exists"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString(result)));
@@ -127,8 +127,8 @@ class RootControllerTest {
         String prefix = "tomato";
         String result = "<p>The number of words: <span>2</span></p>";
         this.mockMvc.perform(post("/prefix")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("prefix", prefix))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("prefix", prefix))
                 .andExpect(view().name("prefix"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString(result)));
@@ -140,8 +140,8 @@ class RootControllerTest {
         prefix = new StringBuilder().append(' ').append(prefix).append(' ').toString();
         String result = "<p>The number of words: <span>2</span></p>";
         this.mockMvc.perform(post("/prefix")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("prefix", prefix))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("prefix", prefix))
                 .andExpect(view().name("prefix"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString(result)));
@@ -152,8 +152,8 @@ class RootControllerTest {
         String prefix = "tomatos";
         String result = "<p>The number of words: <span>0</span></p>";
         this.mockMvc.perform(post("/prefix")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("prefix", prefix))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("prefix", prefix))
                 .andExpect(view().name("prefix"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString(result)));
@@ -164,8 +164,8 @@ class RootControllerTest {
         String prefix = "";
         String result = "must not be blank";
         this.mockMvc.perform(post("/prefix")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("prefix", prefix))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("prefix", prefix))
                 .andExpect(view().name("prefix"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString(result)));
@@ -174,8 +174,8 @@ class RootControllerTest {
     @Test
     void givenStartChar_whenExecSearch_thenSuccess() throws Exception {
         this.mockMvc.perform(post("/search")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("startChar", "a"))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("startChar", "a"))
                 .andExpect(view().name("search"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("The number of words: ")));
@@ -184,8 +184,8 @@ class RootControllerTest {
     @Test
     void givenEndChar_whenExecSearch_thenSuccess() throws Exception {
         this.mockMvc.perform(post("/search")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("endChar", "a"))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("endChar", "a"))
                 .andExpect(view().name("search"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("The number of words: ")));
@@ -194,8 +194,8 @@ class RootControllerTest {
     @Test
     void givenLength_whenExecSearch_thenSuccess() throws Exception {
         this.mockMvc.perform(post("/search")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("length", "1"))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("length", "1"))
                 .andExpect(view().name("search"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("The number of words: ")));
@@ -204,36 +204,36 @@ class RootControllerTest {
     @Test
     void givenStartCharEndChar_whenExecSearch_thenSuccess() throws Exception {
         this.mockMvc.perform(post("/search")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("startChar", "a")
-                        .param("endChar", "a"))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("startChar", "a")
+                .param("endChar", "a"))
                 .andExpect(view().name("search"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("The number of words: ")));
 
         this.mockMvc.perform(post("/search")
-                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                    .param("startChar", "a")
-                    .param("endChar", ""))
-            .andExpect(view().name("search"))
-            .andExpect(status().isOk())
-            .andExpect(content().string(containsString("The number of words: ")));
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("startChar", "a")
+                .param("endChar", ""))
+                .andExpect(view().name("search"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("The number of words: ")));
 
         this.mockMvc.perform(post("/search")
-                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                    .param("startChar", "")
-                    .param("endChar", "a"))
-            .andExpect(view().name("search"))
-            .andExpect(status().isOk())
-            .andExpect(content().string(containsString("The number of words: ")));
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("startChar", "")
+                .param("endChar", "a"))
+                .andExpect(view().name("search"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("The number of words: ")));
     }
 
     @Test
     void givenStartCharLength_whenExecSearch_thenSuccess() throws Exception {
         this.mockMvc.perform(post("/search")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("startChar", "a")
-                        .param("length", "5"))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("startChar", "a")
+                .param("length", "5"))
                 .andExpect(view().name("search"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("The number of words: ")));
@@ -242,9 +242,9 @@ class RootControllerTest {
     @Test
     void givenEndCharLength_whenExecSearch_thenSuccess() throws Exception {
         this.mockMvc.perform(post("/search")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("endChar", "a")
-                        .param("length", "5"))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("endChar", "a")
+                .param("length", "5"))
                 .andExpect(view().name("search"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("The number of words: ")));
@@ -253,10 +253,10 @@ class RootControllerTest {
     @Test
     void givenStartCharEndCharLength_whenExecSearch_thenSuccess() throws Exception {
         this.mockMvc.perform(post("/search")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("startChar", "a")
-                        .param("endChar", "a")
-                        .param("length", "5"))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("startChar", "a")
+                .param("endChar", "a")
+                .param("length", "5"))
                 .andExpect(view().name("search"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("The number of words: ")));
@@ -265,10 +265,10 @@ class RootControllerTest {
     @Test
     void givenAllEmpty_whenExecSearch_thenFailure() throws Exception {
         this.mockMvc.perform(post("/search")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("startChar", "")
-                        .param("endChar", "")
-                        .param("length", ""))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("startChar", "")
+                .param("endChar", "")
+                .param("length", ""))
                 .andExpect(view().name("search"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Invalid startChar")))
@@ -279,8 +279,8 @@ class RootControllerTest {
     @Test
     void givenStartCharLengthGe3_whenExecSearch_thenFailure() throws Exception {
         this.mockMvc.perform(post("/search")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("startChar", "are"))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("startChar", "are"))
                 .andExpect(view().name("search"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("<label id=\"iptStartCharFeedback\" class=\"col-sm-4 text-danger is-invalid\">size must be between 0 and 1</label>")));
@@ -289,8 +289,8 @@ class RootControllerTest {
     @Test
     void givenEndCharLengthGe2_whenExecSearch_thenFailure() throws Exception {
         this.mockMvc.perform(post("/search")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("endChar", "at"))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("endChar", "at"))
                 .andExpect(view().name("search"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("<label id=\"iptEndCharFeedback\" class=\"col-sm-4 text-danger is-invalid\">size must be between 0 and 1</label>")));
@@ -299,8 +299,8 @@ class RootControllerTest {
     @Test
     void givenInvalidLength_whenExecSearch_thenFailure() throws Exception {
         this.mockMvc.perform(post("/search")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("length", "a"))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("length", "a"))
                 .andExpect(view().name("search"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("<label id=\"iptLengthFeedback\" class=\"col-sm-4 text-danger is-invalid\">Failed to convert property value of type java.lang.String to required type java.lang.Integer for property length; nested exception is java.lang.NumberFormatException: For input string: &quot;a&quot;</label>")));
@@ -310,8 +310,8 @@ class RootControllerTest {
     void givenValidWord_whenExecSubWords_thenSuccess() throws Exception {
         String word = "tomato";
         this.mockMvc.perform(post("/subWords")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("word", word))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("word", word))
                 .andExpect(view().name("subWords"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("<p>The number of words: <span>13</span></p>")));
@@ -321,8 +321,8 @@ class RootControllerTest {
     void givenInvalidWord_whenExecSubWords_thenSuccess() throws Exception {
         String word = "drucke";
         this.mockMvc.perform(post("/subWords")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("word", word))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("word", word))
                 .andExpect(view().name("subWords"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("<p>The number of words: <span>22</span></p>")));
@@ -332,8 +332,8 @@ class RootControllerTest {
     void givenWordPadSpace_whenExecSubWords_thenSuccess() throws Exception {
         String word = " duck ";
         this.mockMvc.perform(post("/subWords")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("word", word))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("word", word))
                 .andExpect(view().name("subWords"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("<p>The number of words: <span>1</span></p>")));
@@ -343,9 +343,9 @@ class RootControllerTest {
     void givenValidWordValidMinLength_whenExecSubWords_thenSuccess() throws Exception {
         String word = "tomato";
         this.mockMvc.perform(post("/subWords")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("word", word)
-                        .param("minLength", "4"))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("word", word)
+                .param("minLength", "4"))
                 .andExpect(view().name("subWords"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("<p>The number of words: <span>6</span></p>")));
@@ -355,9 +355,9 @@ class RootControllerTest {
     void givenValidWordGeMinLength_whenExecSubWords_thenSuccess() throws Exception {
         String word = "tomato";
         this.mockMvc.perform(post("/subWords")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("word", word)
-                        .param("minLength", Integer.toString(word.length())))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("word", word)
+                .param("minLength", Integer.toString(word.length())))
                 .andExpect(view().name("subWords"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("<p>The number of words: <span>0</span></p>")));
@@ -367,9 +367,9 @@ class RootControllerTest {
     void givenEmptyWord_whenExecSubWords_thenFailure() throws Exception {
         String word = "";
         this.mockMvc.perform(post("/subWords")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("word", word)
-                        .param("minLength", "9"))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("word", word)
+                .param("minLength", "9"))
                 .andExpect(view().name("subWords"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("<label id=\"iptWordFeedback\" class=\"col-sm-4 text-danger is-invalid\">")));

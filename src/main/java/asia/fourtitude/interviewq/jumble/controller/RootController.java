@@ -1,6 +1,8 @@
 package asia.fourtitude.interviewq.jumble.controller;
 
 import java.time.ZonedDateTime;
+import java.util.Collection;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,15 +51,15 @@ public class RootController {
     public String doPostScramble(
             @ModelAttribute(name = "form") ScrambleForm form,
             BindingResult bindingResult, Model model) {
-        /*
-         * TODO:
-         * a) Validate the input `form`
-         * b) To call JumbleEngine#scramble()
-         * c) Presentation page to show the result
-         * d) Must pass the corresponding unit tests
-         */
+        String word = form.getWord(); // Assuming ScrambleForm has a getWord() method
 
-        return "scramble";
+        // Validate the input `form`
+        if (word == null || word.length() < 3 || word.length() > 30) {
+            bindingResult.rejectValue("word", "error.word", "size must be between 3 and 30");
+        } else {
+            form.setScramble(jumbleEngine.scramble(word));
+        }
+        return "scramble"; // Return to the same view with error message
     }
 
     @GetMapping("palindrome")
@@ -76,15 +78,21 @@ public class RootController {
     public String doPostExists(
             @ModelAttribute(name = "form") ExistsForm form,
             BindingResult bindingResult, Model model) {
-        /*
-         * TODO:
-         * a) Validate the input `form`
-         * b) To call JumbleEngine#exists()
-         * c) Presentation page to show the result
-         * d) Must pass the corresponding unit tests
-         */
+        String word = form.getWord().trim(); // Trim spaces around the word
 
-        return "exists";
+        if (word.isEmpty()) {
+            bindingResult.rejectValue("word", "error.word", "Word must not be empty");
+            return "exists"; // Return to the same view with an error
+        }
+
+        // b) Call JumbleEngine#exists() to check if the word exists
+        boolean exists = jumbleEngine.exists(word);
+
+        // c) Prepare the response in the form
+        form.setExists(exists); // Assuming ExistsForm has a setExists method
+        form.setWord(word); // Ensure the word is set in the form
+
+        return "exists"; // Return the view to display the result
     }
 
     @GetMapping("prefix")
@@ -97,15 +105,20 @@ public class RootController {
     public String doPostPrefix(
             @ModelAttribute(name = "form") PrefixForm form,
             BindingResult bindingResult, Model model) {
-        /*
-         * TODO:
-         * a) Validate the input `form`
-         * b) To call JumbleEngine#wordsMatchingPrefix()
-         * c) Presentation page to show the result
-         * d) Must pass the corresponding unit tests
-         */
+        // a) Validate the input `form`
+        String prefix = form.getPrefix().trim(); // Trim spaces around the prefix
 
-        return "prefix";
+        if (prefix.isEmpty()) {
+            bindingResult.rejectValue("prefix", "error.prefix", "Prefix must not be empty");
+            return "prefix"; // Return to the same view with an error
+        }
+
+        Collection<String> matchingWords = jumbleEngine.wordsMatchingPrefix(prefix);
+        form.setWords(matchingWords);
+
+        model.addAttribute("form", form); // Update the form in the model with results
+
+        return "prefix"; // Return the view to display the result
     }
 
     @GetMapping("search")
@@ -118,16 +131,36 @@ public class RootController {
     public String doPostSearch(
             @ModelAttribute(name = "form") SearchForm form,
             BindingResult bindingResult, Model model) {
-        /*
-         * TODO:
-         * a) Validate the input `form`
-         * b) Show the fields error accordingly: "Invalid startChar", "Invalid endChar", "Invalid length".
-         * c) To call JumbleEngine#searchWords()
-         * d) Presentation page to show the result
-         * e) Must pass the corresponding unit tests
-         */
+        // Validate startChar
+        if (form.getStartChar() == null || form.getStartChar().length() != 1) {
+            bindingResult.rejectValue("startChar", "error.startChar", "Invalid start character.");
+        }
 
-        return "search";
+        // Validate endChar
+        if (form.getEndChar() == null || form.getEndChar().length() != 1) {
+            bindingResult.rejectValue("endChar", "error.endChar", "Invalid end character.");
+        }
+
+        // Validate length
+        if (form.getLength() == null || form.getLength() <= 0) {
+            bindingResult.rejectValue("length", "error.length", "Invalid length.");
+        }
+
+        // If there are errors, return to the same view
+        if (bindingResult.hasErrors()) {
+            return "search";
+        }
+
+        // Call the search method from JumbleEngine
+        Character startChar = form.getStartChar().charAt(0);
+        Character endChar = form.getEndChar().charAt(0);
+        Integer length = form.getLength();
+
+        // Assuming searchWords returns a Collection<String>
+        Collection<String> words = jumbleEngine.searchWords(startChar, endChar, length);
+        form.setWords(words); // Assuming SearchForm has a setWords method
+
+        return "search"; // Return to the same view to display results
     }
 
     @GetMapping("subWords")
