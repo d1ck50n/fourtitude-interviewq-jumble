@@ -1,6 +1,7 @@
 package asia.fourtitude.interviewq.jumble.core;
 
 import asia.fourtitude.interviewq.jumble.exception.JumbleEngineException;
+import asia.fourtitude.interviewq.jumble.util.Validator;
 
 import java.io.*;
 import java.util.*;
@@ -258,7 +259,7 @@ public class JumbleEngine {
         List<String> wordSet = loadFromFile();
 
         // Check for at least one valid input
-        boolean hasValidInput = isValidChar(startChar) || isValidChar(endChar) || (length != null && length >= 1);
+        boolean hasValidInput = Validator.isValidChar(startChar) || Validator.isValidChar(endChar) || (length != null && length >= 1);
 
         if (!hasValidInput) {
             return new ArrayList<>();
@@ -308,14 +309,6 @@ public class JumbleEngine {
             e.printStackTrace(); // Handle the exception as needed
         }
         return wordSet;
-    }
-
-    private boolean isValidChar(Character c) {
-        if (null != c) {
-            c = Character.toLowerCase(c);
-            return c != null && c >= 'a' && c <= 'z'; // Check if character is a lowercase letter
-        }
-        return true;
     }
 
     /**
