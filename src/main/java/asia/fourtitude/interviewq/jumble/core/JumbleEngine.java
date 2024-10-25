@@ -4,6 +4,7 @@ import asia.fourtitude.interviewq.jumble.exception.JumbleEngineException;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class JumbleEngine {
 
@@ -66,13 +67,10 @@ public class JumbleEngine {
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(getClass().getClassLoader().getResourceAsStream("words.txt")))) {
 
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String word = line.trim();
-                if (isPalindrome(word) && word.length() > 1) { // Check for valid palindrome
-                    palindromes.add(word);
-                }
-            }
+            palindromes = reader.lines() // Create a stream of lines
+                    .map(String::trim)
+                    .filter(word -> isPalindrome(word) && word.length() > 1) // Check for valid palindrome
+                    .collect(Collectors.toList());
         } catch (IOException e) {
             throw new JumbleEngineException(e.getMessage());
         }
@@ -257,53 +255,54 @@ public class JumbleEngine {
      */
     public Collection<String> searchWords(Character startChar, Character endChar, Integer length) {
         // Load words into a set for fast lookup
-        Set<String> wordSet = loadSearchWords();
+        List<String> wordSet = loadFromFile();
 
         // Check for at least one valid input
-        boolean hasValidInput = (startChar != null && isValidChar(startChar)) ||
-                (endChar != null && isValidChar(endChar)) ||
-                (length != null && length >= 1);
+        boolean hasValidInput = isValidChar(startChar) || isValidChar(endChar) || (length != null && length >= 1);
 
         if (!hasValidInput) {
-            return new ArrayList<>(); // Return empty list if no valid input
+            return new ArrayList<>();
         }
 
         List<String> matchingWords = new ArrayList<>();
 
-        // Check each word against the criteria
-        for (String word : wordSet) {
-            boolean matches = true;
+        final Character finalStartChar = startChar == null ? null : Character.toLowerCase(startChar);
+        final Character finalEndChar = endChar == null ? null : Character.toLowerCase(endChar);
 
-            // Check start character
-            if (startChar != null && word.charAt(0) != Character.toLowerCase(startChar)) {
-                matches = false;
-            }
+        // all matches start and end character
+        matchingWords = wordSet.stream()
+                .map(String::toLowerCase)
+                .filter(word -> (startChar != null && word.charAt(0) == finalStartChar) ||
+                        (endChar != null && word.charAt(word.length() - 1) == finalEndChar) ||
+                        (length != null && word.length() == length))
+                .collect(Collectors.toList());
 
-            // Check end character
-            if (endChar != null && word.charAt(word.length() - 1) != Character.toLowerCase(endChar)) {
-                matches = false;
-            }
-
-            // Check length
-            if (length != null && word.length() != length) {
-                matches = false;
-            }
-
-            if (matches) {
-                matchingWords.add(word);
-            }
+        if (length != null) {
+            matchingWords = matchingWords.stream()
+                    .filter(word -> (startChar != null && endChar != null) && (word.charAt(0) == finalStartChar && word.charAt(word.length() - 1) == finalEndChar && word.length() == length) ||
+                            (startChar == null && endChar != null) && (word.charAt(word.length() - 1) == finalEndChar && word.length() == length) ||
+                            (startChar != null && endChar == null) && (word.charAt(0) == finalStartChar && word.length() == length) ||
+                            (startChar == null && endChar == null) && (word.length() == length))
+                    .collect(Collectors.toList());
         }
 
+        if (length == null) {
+            matchingWords = matchingWords.stream()
+                    .filter(word -> (startChar != null && endChar != null) && (word.charAt(0) == finalStartChar && word.charAt(word.length() - 1) == finalEndChar) ||
+                            (startChar == null && endChar != null) && (word.charAt(word.length() - 1) == finalEndChar) ||
+                            (startChar != null && endChar == null) && (word.charAt(0) == finalStartChar))
+                    .collect(Collectors.toList());
+        }
         return matchingWords;
     }
 
-    private Set<String> loadSearchWords() {
-        Set<String> wordSet = new HashSet<>();
+    private List<String> loadFromFile() {
+        List<String> wordSet = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(getClass().getClassLoader().getResourceAsStream("words.txt")))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                wordSet.add(line.trim().toLowerCase()); // Store words in lower case
+                wordSet.add(line);
             }
         } catch (IOException e) {
             e.printStackTrace(); // Handle the exception as needed
@@ -312,7 +311,11 @@ public class JumbleEngine {
     }
 
     private boolean isValidChar(Character c) {
-        return c != null && c >= 'a' && c <= 'z'; // Check if character is a lowercase letter
+        if (null != c) {
+            c = Character.toLowerCase(c);
+            return c != null && c >= 'a' && c <= 'z'; // Check if character is a lowercase letter
+        }
+        return true;
     }
 
     /**
@@ -338,46 +341,26 @@ public class JumbleEngine {
      *                  Default is 3.
      * @return The list of sub words constructed from input `word`.
      */
-    public Collection<String> generateSubWords(String word, Integer minLength) {
-        Set<String> result = new HashSet<>();
-
-        // Default minLength to 3 if it is null
-        if (minLength == null) {
-            minLength = 3;
-        }
-
+    public List<String> generateSubWords(String word, Integer minLength) {
         // Validate inputs
-        if (word == null || minLength < 1) {
-            return result;
+        if (word == null || minLength == null || word.trim().isEmpty() || word.length() < minLength) {
+            return Collections.emptyList();
         }
 
-        // Filter out cases where the word length is less than minLength
-        if (word.trim().isEmpty() || word.length() < minLength) {
-            return result;
-        }
+        Set<String> result = new HashSet<>();
+        int length = word.length();
 
         // Generate combinations
-        generateCombinations("", word, result);
-
-        // Filter results by minLength
-        Integer finalMinLength = minLength;
-        result.removeIf(s -> s.length() < finalMinLength);
-
-        return result;
-    }
-
-    private void generateCombinations(String prefix, String remaining, Set<String> result) {
-        if (prefix.length() > 0) {
-            result.add(prefix);  // Add non-empty prefixes
+        for (int i = minLength; i <= length; i++) {
+            generateCombinations(word.toCharArray(), "", i, result);
         }
 
-        for (int i = 0; i < remaining.length(); i++) {
-            // Choose the current character
-            char currentChar = remaining.charAt(i);
-            // Form the new remaining string without the current character
-            String newRemaining = remaining.substring(0, i) + remaining.substring(i + 1);
-            // Recur with the new prefix and remaining
-            generateCombinations(prefix + currentChar, newRemaining, result);
+        return new ArrayList<>(result);
+    }
+
+    private void generateCombinations(char[] letters, String current, int length, Set<String> result) {
+        for (int i = 0; i < letters.length; i++) {
+            generateCombinations(letters, current + letters[i], length, result);
         }
     }
 
